@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Redirect;
 session_start();
 class CategoryProduct extends Controller
 {
+
     public function AuthLogin(){
         $admin_id = Session::get('admin_id');
         if($admin_id){

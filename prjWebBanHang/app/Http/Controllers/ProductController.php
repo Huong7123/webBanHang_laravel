@@ -24,7 +24,6 @@ class ProductController extends Controller
         $this->AuthLogin();
         $cate_product = DB::table('tbl_category_product')->orderby('category_id','desc')->get(); 
         $brand_product = DB::table('tbl_brand')->orderby('brand_id','desc')->get(); 
-       
         return view('layout.admin.add_product')->with('cate_product', $cate_product)->with('brand_product',$brand_product);
     }
     public function all_product(){
@@ -45,26 +44,28 @@ class ProductController extends Controller
             'product_desc' => 'nullable|string',
             'product_content' => 'nullable|string',
             'product_price' => 'required|numeric|min:0',
-            'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'product_image' => 'nullable|image',
             'product_status' => 'required|integer|in:0,1',
         ]);
-
+        
         $imagePath = null;
         if ($request->hasFile('product_image')) {
             $image = $request->file('product_image');
-            $imagePath = $image->store('upload/product', 'public');
+            $imagePath = rand() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('upload/product'), $imagePath);
         }
 
         $product = ProductModel::create([
             'product_name' => $request->input('product_name'),
             'category_id' => $request->input('product_cate'),
-            'brand_id' => $request->input('product_brand'),
+            'brand_id' => $request->input('brand_id'),
             'product_desc' => $request->input('product_desc'),
             'product_content' => $request->input('product_content'),
             'product_price' => $request->input('product_price'),
             'product_image' => $imagePath,
             'product_status' => (int)$request->input('product_status'),
         ]);
+
         return response()->json(['message' => 'Thêm danh mục sản phẩm thành công','data' => $product], 201);
     }
     public function unactive_product($product_id){

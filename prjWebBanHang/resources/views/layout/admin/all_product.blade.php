@@ -7,15 +7,6 @@
   </div>
   
   <div class="table-responsive">
-    @if(session()->has('message'))
-			<div class="alert alert-success">
-				{{ session()->get('message') }}
-			</div>
-		@elseif(session()->has('error'))
-				<div class="alert alert-danger">
-				{{ session()->get('error') }}
-			</div>
-		@endif
     <table class="table table-striped b-t b-light">
       <thead>
         <tr>
@@ -36,7 +27,7 @@
         <tr>
           <td>{{ $pro->product_name }}</td>
           <td>{{ $pro->product_price }}</td>
-          <td><img src="uploads/product/{{ $pro->product_image }}" height="100" width="100"></td>
+          <td><img src="upload/product/{{ $pro->product_image }}" height="100" width="100"></td>
           <td>{{ $pro->category_name }}</td>
           <td>{{ $pro->brand_name }}</td>
 
