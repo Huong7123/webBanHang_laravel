@@ -6,19 +6,10 @@
             <header class="panel-heading">
                 Thêm sản phẩm
             </header>
-            @if(session()->has('message'))
-                <div class="alert alert-success">
-                    {{ session()->get('message') }}
-                </div>
-            @elseif(session()->has('error'))
-                    <div class="alert alert-danger">
-                    {{ session()->get('error') }}
-                </div>
-            @endif
             <div class="panel-body">
 
                 <div class="position-center">
-                    <form enctype="multipart/form-data">
+                    <form enctype="multipart/form-data" id="form-add-product">
                         {{ csrf_field() }}
                         <div class="form-group">
                             <label for="exampleInputEmail1">Tên sản phẩm</label>
@@ -43,19 +34,18 @@
                         <div class="form-group">
                             <label for="exampleInputPassword1">Danh mục sản phẩm</label>
                             <select name="product_cate" id="categoryId" class="form-control input-sm m-bot15">
-                                @foreach($cate_product as $key => $cate)
-                                    <option value="{{$cate->category_id}}">{{$cate->category_name}}</option>
+                                @foreach($cate_product as $key => $category)
+                                    <option value="{{$category->category_id}}">{{$category->category_name}}</option>
                                 @endforeach
-                                    
+                            </select>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputPassword1">Thương hiệu</label>
-                            <select name="product_brand" id="brandId" class="form-control input-sm m-bot15">
+                            <label for="exampleInputPassword1">Thương hiệu sản phẩm</label>
+                            <select name="brand_id" id="brandId" class="form-control input-sm m-bot15">
                                 @foreach($brand_product as $key => $brand)
                                     <option value="{{$brand->brand_id}}">{{$brand->brand_name}}</option>
                                 @endforeach
-                                    
                             </select>
                         </div>
                         <div class="form-group">
@@ -65,7 +55,7 @@
                                 <option value="1">Hiển thị</option>
                             </select>
                         </div>
-                        <button name="add_product" class="btn btn-info add_product">Thêm sản phẩm</button>
+                        <button name="add_product" type="submit" class="btn btn-info add_product">Thêm sản phẩm</button>
                     </form>
                 </div>
             </div>
@@ -75,35 +65,35 @@
 <script>
     $(document).ready(function() {
         $('.add_product').on('click', function(event) {
+            
             event.preventDefault();
-            const data = {
-                product_name: $('#productName').val(),
-                category_id: $('#categoryId').val(),
-                brand_id: $('#brandId').val(),
-                product_desc: $('#productDesc').val(),
-                product_content: $('#productContent').val(),
-                product_price: $('#productPrice').val(),
-                product_image: $('#productImage').val()[0].files,
-                product_status: $('select[name="product_status"]').val(),
-                _token: $('input[name="_token"]').val()
-            };
 
-            let formData = new FormData();
-            for (let key in data) {
-                formData.append(key, data[key]);
-            }
+            var form = $('#form-add-product')[0];
+            var data = new FormData(form);
+            data.append('product_name', $('#productName').val());
+            data.append('category_id', $('#categoryId').val());
+            data.append('brand_id', $('#brandId').val());
+            data.append('product_desc', $('#productDesc').val());
+            data.append('product_content', $('#productContent').val());
+            data.append('product_price', $('#productPrice').val());
+            data.append('product_image', $('#productImage').val());
+            data.append('product_status', $('select[name="product_status"]').val());
 
             $.ajax({
-                url: '{{route('api.save-product')}}',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function(response) {
-                    $('#message').text(response.message);
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "{{route('api.save-product')}}",
+                data: data,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 600000,
+                success: function (data) {
+                    alert('Thêm sản phẩm thành công!')
+
                 },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    $('#message').text('Có lỗi xảy ra!');
+                error: function (e) {
+
                 }
             });
         });

@@ -6,15 +6,6 @@
             <header class="panel-heading">
                 Thêm danh mục sản phẩm
             </header>
-            @if(session()->has('message'))
-                <div class="alert alert-success">
-                    {{ session()->get('message') }}
-                </div>
-            @elseif(session()->has('error'))
-                    <div class="alert alert-danger">
-                    {{ session()->get('error') }}
-                </div>
-            @endif
             <div class="panel-body">
 
                 <div class="position-center">
@@ -60,11 +51,10 @@
                 contentType: 'application/json',
                 data: JSON.stringify(data),
                 success: function(response) {
-                    $('#message').text(response.message);
+                    alert('Thêm sản phẩm thành công!')
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    $('#message').text('Có lỗi xảy ra!');
+                    
                 }
             });
         });
