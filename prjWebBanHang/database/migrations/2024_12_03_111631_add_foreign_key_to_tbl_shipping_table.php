@@ -13,13 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_order', function (Blueprint $table) {
-            $table->bigIncrements('order_id');
-            $table->unsignedInteger('customer_id');
-            $table->unsignedInteger('shipping_id');
-            $table->float('order_total');
-            $table->integer('order_status');
-            $table->timestamps();
+        Schema::table('tbl_shipping', function (Blueprint $table) {
+            $table->foreign('customer_id')->references('customer_id')->on('tbl_customers');
         });
     }
 
@@ -30,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tbl_order');
+        Schema::table('tbl_shipping', function (Blueprint $table) {
+            $table->dropForeign(['customer_id']);
+        });
     }
 };

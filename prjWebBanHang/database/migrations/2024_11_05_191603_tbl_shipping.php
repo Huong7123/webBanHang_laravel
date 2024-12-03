@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('tbl_shipping', function (Blueprint $table) {
             $table->Increments('shipping_id');
-            $table->integer('customer_id');
+            $table->unsignedInteger('customer_id');
             $table->string('shipping_name');
             $table->string('shipping_email');
             $table->string('shipping_address');
