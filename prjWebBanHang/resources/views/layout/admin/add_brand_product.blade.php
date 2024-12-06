@@ -52,7 +52,7 @@
                 contentType: 'application/json',
                 data: JSON.stringify(data),
                 success: function(response) {
-                    alert('Thêm sản phẩm thành công!')
+                    alert('Thêm thương hiệu sản phẩm thành công!')
                 },
                 error: function(xhr, status, error) {
                     

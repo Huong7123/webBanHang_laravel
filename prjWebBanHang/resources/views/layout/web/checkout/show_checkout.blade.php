@@ -49,7 +49,7 @@
 													?>
 													<tr>
 														<td class="cart_product">
-															<img src="uploads/product/{{ $cart['product_image']}}" width="90" alt="{{$cart['product_name']}}">
+															<img src="upload/product/{{ $cart['product_image']}}" width="90" alt="{{$cart['product_name']}}">
 														</td>
 														<td class="cart_description">
 															<h4><a href=""></a></h4>

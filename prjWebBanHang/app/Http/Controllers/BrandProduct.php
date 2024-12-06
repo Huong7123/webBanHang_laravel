@@ -45,7 +45,7 @@ class BrandProduct extends Controller
             'brand_desc' => $request->input('brand_product_desc'),
             'brand_status' => (int)$request->input('brand_product_status'), 
         ]);
-        return response()->json(['message' => 'Thêm danh mục sản phẩm thành công','data' => $brand], 201);
+        return response()->json(['message' => 'Thêm thương hiệu sản phẩm thành công','data' => $brand], 201);
     }
 
     public function unactive_brand_product($brand_product_id){
@@ -71,15 +71,20 @@ class BrandProduct extends Controller
     }
 
     public function update_brand_product(Request $request,$brand_product_id){
-        $this->AuthLogin();
-        $data = array();
-        $data['brand_name'] = $request->brand_product_name;
-        //$data['meta_keywords'] = $request->brand_product_keywords;
-        //$data['slug_brand_product'] = $request->slug_brand_product;
-        $data['brand_desc'] = $request->brand_product_desc;
-        DB::table('tbl_brand')->where('brand_id',$brand_product_id)->update($data);
-        Session::put('message','Cập nhật thương hiệu sản phẩm thành công');
-        return Redirect::to('all-brand-product');
+        $request->validate([
+            'brand_product_name' => 'required|string|max:255',
+            'brand_product_desc' => 'nullable|string',
+        ]);
+        $brand = BrandModel::find($brand_product_id);
+        if (!$brand) {
+            return response()->json(['message' => 'Không tìm thấy thương hiệu'], 404);
+        }
+        $brand->update([
+            'brand_name' => $request->input('brand_product_name'),
+            'brand_desc' => $request->input('brand_product_desc'),
+        ]);
+        $brand->save();
+        return response()->json(['message' => 'Cập nhật thương hiệu thành công', 'brand' => $brand]);
     }
 
     public function delete_brand_product($brand_product_id){

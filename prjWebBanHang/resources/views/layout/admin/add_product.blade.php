@@ -90,7 +90,6 @@
                 timeout: 600000,
                 success: function (data) {
                     alert('Thêm sản phẩm thành công!')
-
                 },
                 error: function (e) {
 
