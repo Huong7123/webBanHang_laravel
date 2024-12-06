@@ -66,7 +66,7 @@ class ProductController extends Controller
             'product_status' => (int)$request->input('product_status'),
         ]);
 
-        return response()->json(['message' => 'Thêm danh mục sản phẩm thành công','data' => $product], 201);
+        return response()->json(['message' => 'Thêm sản phẩm thành công','data' => $product], 201);
     }
     public function unactive_product($product_id){
         $this->AuthLogin();
@@ -91,31 +91,40 @@ class ProductController extends Controller
         return view('layout-admin')->with('layout.admin.edit_product', $manager_product);
     }
     public function update_product(Request $request,$product_id){
-        $this->AuthLogin();
-        $data = array();
-        $data['product_name'] = $request->product_name;
-        $data['product_price'] = $request->product_price;
-        $data['product_desc'] = $request->product_desc;
-        $data['product_content'] = $request->product_content;
-        $data['category_id'] = $request->product_cate;
-        $data['brand_id'] = $request->product_brand;
-        $data['product_status'] = $request->product_status;
-        $get_image = $request->file('product_image');
+        $request->validate([
+            'product_name' => 'required|string|max:255',
+            'category_id' => 'required|integer|exists:tbl_category_product',
+            'brand_id' => 'required|integer|exists:tbl_brand',
+            'product_desc' => 'nullable|string',
+            'product_content' => 'nullable|string',
+            'product_price' => 'required|numeric|min:0',
+            'product_image' => 'nullable|image',
+        ]);
         
-        if($get_image){
-                    $get_name_image = $get_image->getClientOriginalName();
-                    $name_image = current(explode('.',$get_name_image));
-                    $new_image =  $name_image.rand(0,99).'.'.$get_image->getClientOriginalExtension();
-                    $get_image->move('uploads/product',$new_image);
-                    $data['product_image'] = $new_image;
-                    DB::table('tbl_product')->where('product_id',$product_id)->update($data);
-                    Session::put('message','Cập nhật sản phẩm thành công');
-                    return Redirect::to('all-product');
+        $imagePath = null;
+        if ($request->hasFile('product_image')) {
+            $image = $request->file('product_image');
+            $imagePath = rand() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('upload/product'), $imagePath);
         }
-            
-        DB::table('tbl_product')->where('product_id',$product_id)->update($data);
-        Session::put('message','Cập nhật sản phẩm thành công');
-        return Redirect::to('all-product');
+
+        $product = ProductModel::find($product_id);
+        if (!$product) {
+            return response()->json(['message' => 'Không tìm thấy thương hiệu'], 404);
+        }
+
+        $product ->update([
+            'product_name' => $request->input('product_name'),
+            'category_id' => $request->input('product_cate'),
+            'brand_id' => $request->input('brand_id'),
+            'product_desc' => $request->input('product_desc'),
+            'product_content' => $request->input('product_content'),
+            'product_price' => $request->input('product_price'),
+            'product_image' => $imagePath,
+        ]);
+        $product->save();
+
+        return response()->json(['message' => 'Thêm danh mục sản phẩm thành công','data' => $product], 201);
     }
     public function delete_product($product_id){
         $this->AuthLogin();

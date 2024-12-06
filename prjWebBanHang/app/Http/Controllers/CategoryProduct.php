@@ -16,6 +16,7 @@ class CategoryProduct extends Controller
     public function AuthLogin(){
         $admin_id = Session::get('admin_id');
         if($admin_id){
+            // no vao day nay
             return Redirect::to('/dashboard');
         }else{
             return Redirect::to('/admin')->send();
@@ -52,13 +53,11 @@ class CategoryProduct extends Controller
     public function unactive_category_product($category_product_id){
         $this->AuthLogin();
         DB::table('tbl_category_product')->where('category_id',$category_product_id)->update(['category_status'=>0]);
-        Session::put('message','Ẩn kích hoạt danh mục sản phẩm thành công');
         return Redirect::to('all-category-product');
     }
     public function active_category_product($category_product_id){
         $this->AuthLogin();
         DB::table('tbl_category_product')->where('category_id',$category_product_id)->update(['category_status'=>1]);
-        Session::put('message','Hiển thị danh mục sản phẩm thành công');
         return Redirect::to('all-category-product');
     }
     public function edit_category_product($category_product_id){
@@ -71,15 +70,20 @@ class CategoryProduct extends Controller
     }
 
     public function update_category_product(Request $request,$category_product_id){
-        $this->AuthLogin();
-        $data = array();
-        $data['category_name'] = $request->category_product_name;
-        //$data['meta_keywords'] = $request->category_product_keywords;
-        //$data['slug_category_product'] = $request->slug_category_product;
-        $data['category_desc'] = $request->category_product_desc;
-        DB::table('tbl_category_product')->where('category_id',$category_product_id)->update($data);
-        Session::put('message','Cập nhật danh mục sản phẩm thành công');
-        return Redirect::to('all-category-product');
+        $request->validate([
+            'category_product_name' => 'required|string|max:255',
+            'category_product_desc' => 'nullable|string',
+        ]);
+        $category = CategoryModel::find($category_product_id);
+        if (!$category) {
+            return response()->json(['message' => 'Không tìm thấy danh mục'], 404);
+        }
+        $category->update([
+            'category_name' => $request->input('category_product_name'),
+            'category_desc' => $request->input('category_product_desc'),
+        ]);
+        $category->save();
+        return response()->json(['message' => 'Cập nhật danh mục thành công', 'category' => $category]);
     }
 
     public function delete_category_product($category_product_id){

@@ -51,7 +51,7 @@
                 contentType: 'application/json',
                 data: JSON.stringify(data),
                 success: function(response) {
-                    alert('Thêm sản phẩm thành công!')
+                    alert('Thêm danh mục sản phẩm thành công!')
                 },
                 error: function(xhr, status, error) {
                     

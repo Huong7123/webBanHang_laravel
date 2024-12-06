@@ -35,7 +35,7 @@
                     <div class="product-details"><!--product-details-->
                         <div class="col-sm-5">
                             <div class="view-product">
-                                <img src="/uploads/product/{{ $value->product_image }}" alt="" />
+                                <img src="/upload/product/{{ $value->product_image }}" alt="" />
                             </div>
                             <div id="similar-product" class="carousel slide" data-ride="carousel">
                                 
@@ -115,7 +115,7 @@
                                             <div class="product-image-wrapper">
                                                 <div class="single-products">
                                                     <div class="productinfo text-center">
-                                                        <img src="/uploads/product/{{ $lienquan->product_image }}" alt="" />
+                                                        <img src="/upload/product/{{ $lienquan->product_image }}" alt="" />
                                                         <h2>{{ number_format(floatval($lienquan->product_price)).' '.'VNĐ'}}</h2>
                                                         <p>{{$lienquan -> product_name}}</p>
                                                         <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Thêm giỏ hàng</button>

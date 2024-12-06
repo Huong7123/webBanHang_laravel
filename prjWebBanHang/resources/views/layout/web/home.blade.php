@@ -29,7 +29,6 @@
 								<img style="width: 100%;" src="/fontend/images/slider4.webp" class="girl img-responsive" alt="" />
 							</div>
 						</div>
-						
 					</div>
 					
 					<a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
@@ -93,7 +92,7 @@
 												<input type="hidden" value="1" class="cart_product_qty_{{$product->product_id}}">
 
 												<a href="{{URL::to('/chi-tiet-san-pham/'.$product->product_id)}}">
-													<img src="uploads/product/{{ $product->product_image }}" alt="" />
+													<img src="upload/product/{{ $product->product_image }}" alt="" />
 													<h2>{{ number_format(floatval($product->product_price)).' '.'VNĐ'}}</h2>
 													<p>{{$product->product_name}}</p>
 												</a>
